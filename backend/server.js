@@ -1,14 +1,13 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const cron = require("node-cron");
-require("dotenv").config();
-
 const Task = require("./models/Task");
 const User = require("./models/User");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -24,7 +23,6 @@ const createDefaultUsers = async () => {
     { username: "Apple", password: "apple123" },
     { username: "Banana", password: "banana123" }
   ];
-
   for (const userData of defaultUsers) {
     const existingUser = await User.findOne({ username: userData.username });
     if (!existingUser) {
@@ -88,7 +86,6 @@ app.post("/tasks", async (req, res) => {
   }
 });
 
-// Toggle checkbox (only logged-in user)
 app.put("/tasks/:id", async (req, res) => {
   const { username } = req.body;
   try {
@@ -127,7 +124,8 @@ cron.schedule("0 0 * * *", async () => {
   }
 });
 
+// Default route for backend check
+app.get("/", (req, res) => res.send("✅ Tracker backend is running!"));
+
 // Start server
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
