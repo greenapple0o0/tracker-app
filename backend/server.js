@@ -9,15 +9,32 @@ const User = require("./models/User");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// ✅ CORS setup — allow frontend and local dev
+const allowedOrigins = [
+  "http://localhost:3000", // local React dev
+  "https://tracker-frontend-5j3q.onrender.com", // ← replace with your actual frontend Render URL
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ Connected to MongoDB"))
-  .catch(err => console.error("❌ MongoDB connection error:", err));
+// ✅ MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("✅ Connected to MongoDB"))
+.catch(err => console.error("❌ MongoDB connection error:", err));
 
-// Auto-create default users
+// ✅ Auto-create default users
 const createDefaultUsers = async () => {
   const defaultUsers = [
     { username: "Apple", password: "apple123" },
@@ -37,7 +54,7 @@ mongoose.connection.once("open", () => {
   createDefaultUsers().catch(err => console.error(err));
 });
 
-// Auth endpoints
+// ✅ Auth endpoints
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -65,7 +82,7 @@ app.put("/change-password", async (req, res) => {
   }
 });
 
-// Task endpoints
+// ✅ Task endpoints
 app.get("/tasks", async (req, res) => {
   try {
     const tasks = await Task.find().sort({ createdAt: -1 });
@@ -96,7 +113,7 @@ app.put("/tasks/:id", async (req, res) => {
       return res.status(400).json({ error: "Invalid user" });
     }
 
-    task[username + "Done"] = !task[username + "Done"];
+    task[`${username}Done`] = !task[`${username}Done`];
     await task.save();
     res.json(task);
   } catch (err) {
@@ -113,7 +130,7 @@ app.delete("/tasks/:id", async (req, res) => {
   }
 });
 
-// Reset checkboxes every 24 hours at midnight UTC
+// ✅ Daily reset for checkboxes at midnight UTC
 cron.schedule("0 0 * * *", async () => {
   console.log("♻ Resetting checkboxes for all tasks...");
   try {
@@ -124,8 +141,8 @@ cron.schedule("0 0 * * *", async () => {
   }
 });
 
-// Default route for backend check
+// ✅ Default route for Render health check
 app.get("/", (req, res) => res.send("✅ Tracker backend is running!"));
 
-// Start server
+// ✅ Start server
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
