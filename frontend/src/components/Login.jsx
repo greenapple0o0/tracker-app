@@ -10,7 +10,7 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("http://localhost:5000/login", { username, password });
+      const res = await axios.post("https://tracker-app-1-5j3q.onrender.com/", { username, password });
       onLogin(res.data.username);
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");

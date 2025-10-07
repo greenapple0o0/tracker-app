@@ -9,7 +9,7 @@ export default function ChangePassword({ username }) {
 
   const handleChange = async () => {
     try {
-      const res = await axios.put("http://localhost:5000/change-password", {
+      const res = await axios.put("https://tracker-app-1-5j3q.onrender.com/", {
         username,
         oldPassword,
         newPassword
