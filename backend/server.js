@@ -11,8 +11,8 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ CORS setup — allow frontend and local dev
 const allowedOrigins = [
-  "http://localhost:3000", // local React dev
-  "https://tracker-app-65i2.onrender.com/", // ← replace with your actual frontend Render URL
+  "http://localhost:3000",
+  "https://tracker-app-65i2.onrender.com" // removed trailing slash
 ];
 
 app.use(cors({

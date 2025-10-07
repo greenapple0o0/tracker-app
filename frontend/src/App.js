@@ -6,7 +6,7 @@ import CountdownTimer from "./components/CountdownTimer";
 import "./styles/app.css";
 
 // Replace with your deployed backend URL
-const API_BASE = "https://tracker-app-1-5j3q.onrender.com";
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
