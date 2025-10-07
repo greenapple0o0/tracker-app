@@ -6,11 +6,15 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  // Use environment variable for API URL, fallback to localhost for development
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("https://tracker-app-1-5j3q.onrender.com/", { username, password });
+      // Make POST request to /api/login route
+      const res = await axios.post(`${API_URL}/api/login`, { username, password });
       onLogin(res.data.username);
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
@@ -30,7 +34,11 @@ export default function Login({ onLogin }) {
         </label>
         <label>
           Password:
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </label>
         <button type="submit">Login</button>
         {error && <p style={{ color: "red" }}>{error}</p>}
