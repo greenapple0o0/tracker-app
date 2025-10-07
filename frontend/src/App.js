@@ -5,6 +5,9 @@ import TaskList from "./components/TaskList";
 import CountdownTimer from "./components/CountdownTimer";
 import "./styles/app.css";
 
+// Replace with your deployed backend URL
+const API_BASE = "https://tracker-app-1-5j3q.onrender.com";
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -16,7 +19,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/tasks");
+      const res = await axios.get(`${API_BASE}/tasks`);
       setTasks(res.data);
     } catch (err) {
       console.error(err);
@@ -26,7 +29,7 @@ function App() {
   const addTask = async () => {
     if (!newTask) return;
     try {
-      const res = await axios.post("http://localhost:5000/tasks", { text: newTask });
+      const res = await axios.post(`${API_BASE}/tasks`, { text: newTask });
       setTasks([res.data, ...tasks]);
       setNewTask("");
     } catch (err) {
@@ -36,7 +39,7 @@ function App() {
 
   const toggleTask = async (id, username) => {
     try {
-      const res = await axios.put(`http://localhost:5000/tasks/${id}`, { username });
+      const res = await axios.put(`${API_BASE}/tasks/${id}`, { username });
       setTasks(tasks.map(t => t._id === id ? res.data : t));
     } catch (err) {
       console.error(err);
@@ -45,7 +48,7 @@ function App() {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/tasks/${id}`);
+      await axios.delete(`${API_BASE}/tasks/${id}`);
       setTasks(tasks.filter(t => t._id !== id));
     } catch (err) {
       console.error(err);
