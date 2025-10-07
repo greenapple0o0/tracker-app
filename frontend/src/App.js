@@ -5,7 +5,7 @@ import TaskList from "./components/TaskList";
 import CountdownTimer from "./components/CountdownTimer";
 import "./styles/app.css";
 
-// Replace with your deployed backend URL
+// ✅ Use environment variable
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 function App() {
